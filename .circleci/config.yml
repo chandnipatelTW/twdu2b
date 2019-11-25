@@ -1,0 +1,67 @@
+defaults: &defaults
+    docker:
+        - image: circleci/openjdk:8-jdk
+    working_directory: /home/circleci/project
+
+version: 2
+jobs:
+    build:
+        <<: *defaults
+        steps:
+            - checkout
+            - restore_cache:
+                keys:
+                    - java-dependencies-{{ checksum "./CitibikeApiProducer/build.gradle" }}
+            - restore_cache:
+                keys:
+                    - scala-dependencies-{{ checksum "./RawDataSaver/build.sbt" }}-{{ checksum "./StationConsumer/build.sbt"}}-{{ checksum "./StationTransformerNYC/build.sbt"}}
+            - run:
+                command: ./sbin/buildAll.sh               
+            - persist_to_workspace:
+                root: /home/circleci/project
+                paths:
+                    - CitibikeApiProducer/build/
+                    - RawDataSaver/target/
+                    - StationConsumer/target/
+                    - StationTransformerNYC/target/
+            - run:
+                command: ls /home/circleci/project/
+            - save_cache:
+                key: scala-dependencies-{{ checksum "./RawDataSaver/build.sbt" }}-{{ checksum "./StationConsumer/build.sbt"}}-{{ checksum "./StationTransformerNYC/build.sbt"}}
+                paths:
+                    - "~/.ivy2/cache"
+            - save_cache:
+                key: java-dependencies-{{ checksum "./CitibikeApiProducer/build.gradle" }}
+                paths:
+                    - "~/.gradle"
+
+    deploy:
+        <<: *defaults
+        steps:
+            - checkout
+            - attach_workspace:
+                at: /home/circleci/project
+            - add_ssh_keys:
+                fingerprints:
+                    - "22:8a:cb:3b:e6:8d:d0:e5:48:1e:a2:43:3d:69:bf:d3"
+            - run:
+                command: ./sbin/deploy.sh
+
+workflows:
+    version: 2
+    build_and_deploy:
+        jobs:
+            - build:
+                filters:
+                    branches:
+                        only: 
+                            - master
+                            - start
+            - approve-deploy:
+                type: approval
+                requires: 
+                    - build
+            - deploy:
+                requires:
+                    - approve-deploy
+
