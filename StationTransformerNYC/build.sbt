@@ -12,6 +12,10 @@ lazy val root = (project in file(".")).
 
     name := "free2wheelers-station-transformer-nyc",
 
+    dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-core" % "2.9.9"
+    dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.9"
+    dependencyOverrides += "com.fasterxml.jackson.module" % "jackson-module-scala_2.11" % "2.9.9"
+
     libraryDependencies ++= Seq(
       "org.scalatest" %% "scalatest" % "3.0.5" % "test",
       "org.apache.kafka" %% "kafka" % "1.1.1" % "test",
