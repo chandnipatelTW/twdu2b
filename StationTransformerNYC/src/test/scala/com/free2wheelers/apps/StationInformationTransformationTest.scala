@@ -2,7 +2,7 @@ package com.free2wheelers.apps
 
 import com.free2wheelers.apps.StationInformationTransformation._
 import org.apache.spark.sql.SparkSession
-import org.scalatest.{FeatureSpec, GivenWhenThen, Matchers}
+import org.scalatest._
 
 class StationInformationTransformationTest extends FeatureSpec with Matchers with GivenWhenThen {
   feature("Apply station information transformations to data frame") {
