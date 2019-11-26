@@ -71,6 +71,10 @@ jobs:
             - checkout
             - attach_workspace:
                 at: /home/circleci/project
+            - persist_to_workspace:
+                root: /home/circleci/project
+                paths:
+                    - e2e-test/resources/
             - add_ssh_keys:
                 fingerprints:
                     - "9f:64:eb:f4:59:f0:09:be:43:67:96:0e:c3:3b:e6:cd"
