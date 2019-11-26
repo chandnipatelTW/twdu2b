@@ -47,7 +47,7 @@ function kafkaPublishMessage () {
     echo "============================="
     echo "1. Test: Kafka publish message"
     echo "============================="
-    kafka-console-producer --broker-list localhost:9092 --topic "station_data_test" < "$JSON_DATA_TEST"
+    kafka-console-producer --broker-list localhost:9092 --topic "station_data_test" <<< "$JSON_DATA_TEST"
     if [ $? -eq 1 ]
     then
         echo "Failure: Cant publish message in the topic in Kafka"
