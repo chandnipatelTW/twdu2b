@@ -2,6 +2,11 @@ val sparkVersion = "2.3.0"
 
 lazy val root = (project in file(".")).
 
+lazy val excludeJpountz = ExclusionRule(organization = "net.jpountz.lz4", name = "lz4")
+
+lazy val kafkaClients = "org.apache.kafka" % "kafka-clients" % userKafkaVersionHere excludeAll(excludeJpountz) // add more exclusions here
+
+
   settings(
     inThisBuild(List(
       organization := "com.free2wheelers",
