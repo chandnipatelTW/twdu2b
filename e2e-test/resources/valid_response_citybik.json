@@ -3,8 +3,8 @@
 		"company": [
 			"JCDecaux"
 		],
-		"href": "/v2/networks/le-velo",
-		"id": "le-velo",
+		"href": "/v2/networks/test",
+		"id": "test",
 		"license": {
 			"name": "Open Licence",
 			"url": "https://developer.jcdecaux.com/#/opendata/licence"
