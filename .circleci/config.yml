@@ -34,9 +34,18 @@ jobs:
                 key: java-dependencies-{{ checksum "./CitibikeApiProducer/build.gradle" }}
                 paths:
                     - "~/.gradle"
-                    
-            - e2e_test:
-                - command: ./e2e-test/e2e.sh
+
+    e2e-test:
+        <<: *defaults
+        steps:
+            - checkout
+            - attach_workspace:
+                at: /home/circleci/project
+            - add_ssh_keys:
+                fingerprints:
+                    - "9f:64:eb:f4:59:f0:09:be:43:67:96:0e:c3:3b:e6:cd"
+            - run:
+                command: ./e2e-test/e2e.sh
 
     deploy:
         <<: *defaults
