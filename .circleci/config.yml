@@ -65,7 +65,6 @@ jobs:
                 paths:
                     - "~/.gradle"
 
-
     e2e-test:
         <<: *defaults
         steps:
