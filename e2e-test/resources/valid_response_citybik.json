@@ -15,7 +15,7 @@
 			"latitude": 43.296482,
 			"longitude": 5.36978
 		},
-		"name": "Le vélo",
+		"name": "TestStationData",
 		"source": "https://developer.jcdecaux.com",
 		"stations": [{
 			"empty_slots": 16,
