@@ -142,6 +142,8 @@ services:
           - raw-station-status-data-saver
         volumes:
           - ~/.ivy2:/root/.ivy2:rw
+        ports:
+          - "4444:4040"
         command: ["./wait-for.sh", "zookeeper:2181", "-t", "30"]
         networks:
           - streaming-data-internal
