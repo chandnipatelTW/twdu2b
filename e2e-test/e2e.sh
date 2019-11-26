@@ -1,7 +1,7 @@
 function kafkaPublishMessage () {
-    echo "-----------------------------"
+    echo "============================="
     echo "1. Test: Kafka publish message"
-    echo "-----------------------------"
+    echo "============================="
     kafka-console-producer --broker-list localhost:9092 --topic "station_data_test" < resources/valid_response_citybik.json
     if [ $? -eq 0 ]
     then
@@ -13,16 +13,18 @@ function kafkaPublishMessage () {
 
 }
 
-function waitForHDFSUpdate () {
+function waitProcessToFinish () {
     echo "-----------------------------"
-    echo "2. Test: Wait for HDFS Update"
+    echo "Waiting 1 minute for process to finish"
     echo "-----------------------------"
+    sleep 60
 
 }
 
-echo "-----------------------------"
+echo "============================="
 echo "TwoWheelers E2E Test"
-echo "-----------------------------"
+echo "============================="
+
 
 kafkaPublishMessage
 waitForHDFSUpdate
