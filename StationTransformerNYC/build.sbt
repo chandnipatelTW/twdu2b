@@ -13,9 +13,9 @@ lazy val root = (project in file(".")).
 
     name := "free2wheelers-station-transformer-nyc",
 
-    dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-core" % "2.9.9"
-    dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.9"
-    dependencyOverrides += "com.fasterxml.jackson.module" % "jackson-module-scala_2.11" % "2.9.9"
+    dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-core" % "2.9.10",
+    dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.10",
+    dependencyOverrides += "com.fasterxml.jackson.module" % "jackson-module-scala_2.11" % "2.9.10",
 
     libraryDependencies ++= Seq(
       "org.scalatest" %% "scalatest" % "3.0.5" % "test",
