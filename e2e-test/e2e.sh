@@ -1,3 +1,5 @@
+WAITING_TIME_SECONDS=60
+
 function kafkaPublishMessage () {
     echo "============================="
     echo "1. Test: Kafka publish message"
@@ -17,7 +19,7 @@ function waitProcessToFinish () {
     echo "-----------------------------"
     echo "Waiting 1 minute for process to finish"
     echo "-----------------------------"
-    sleep 60
+    sleep "$WAITING_TIME_SECONDS"
 
 }
 
