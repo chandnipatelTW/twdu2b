@@ -57,7 +57,8 @@ workflows:
                         only: 
                             - master
                             - start
-                            - e2e-testing                            
+                            - e2e-testing
+                            - pipeline-runs-tests
             - approve-deploy:
                 type: approval
                 requires: 
