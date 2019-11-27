@@ -24,5 +24,5 @@ fi
 echo "Metrics calculated: FILE_EXISTS: $FILE_EXISTS, FILE_UPDATED: $FILE_UPDATED"
 
 echo "Pushing updated metrics to cloudwatch, namespace $NAMESPACE"
-aws cloudwatch put-metric-data --metric-name file-exists --region="ap-southeast-1" --dimensions Instance=j-3GR8OE0FH0VLQ --namespace "$NAMESPACE" --value $FILE_EXISTS
-aws cloudwatch put-metric-data --metric-name file-updated --region="ap-southeast-1" --dimensions Instance=j-3GR8OE0FH0VLQ --namespace "$NAMESPACE" --value $FILE_UPDATED
+aws cloudwatch put-metric-data --metric-name file-exists --region="ap-southeast-1" --namespace "$NAMESPACE" --value $FILE_EXISTS
+aws cloudwatch put-metric-data --metric-name file-updated --region="ap-southeast-1" --namespace "$NAMESPACE" --value $FILE_UPDATED
