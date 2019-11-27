@@ -77,10 +77,29 @@ function kafkaPublishMessageTest () {
 
 }
 
+function getOutputCSVFromHDFS () {
+	echo "============================="
+    echo "Get output CSV from HDFS     "
+    echo "============================="
+
+	# Executing in a container env
+	hadoop_container=streamingdatapipeline_hadoop_1
+	result=$(docker exec "$hadoop_container" sh -c './usr/local/hadoop/bin/hadoop fs -cat /free2wheelers/stationMart/data/part-*.csv | grep TestStationData')
+
+	if [ -z "$result" ]
+    then
+        echo "Failure: Previous message was not processed"
+        exit 1
+    else
+        echo "Sucess: Previous message processed! yay!!!!!"
+    fi
+	# TODO: Executing in a remote EMR instance
+	#ssh emr-master."$TRAINING_GROUP".training 
+}
+
 echo "============================="
 echo "TwoWheelers E2E Test"
 echo "============================="
 
-
-kafkaPublishMessage
-waitForHDFSUpdate
+kafkaPublishMessageTest
+getOutputCSVFromHDFS
