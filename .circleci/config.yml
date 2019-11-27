@@ -35,36 +35,6 @@ jobs:
                 paths:
                     - "~/.gradle"
 
-    build_producer:
-        <<: *defaults
-        steps:
-            - checkout
-            - restore_cache:
-                keys:
-                    - java-dependencies-{{ checksum "./CitibikeApiProducer/build.gradle" }}
-            - restore_cache:
-                keys:
-                    - scala-dependencies-{{ checksum "./RawDataSaver/build.sbt" }}-{{ checksum "./StationConsumer/build.sbt"}}-{{ checksum "./StationTransformerNYC/build.sbt"}}
-            - run:
-                command: ./sbin/buildProducerOnly.sh               
-            - persist_to_workspace:
-                root: /home/circleci/project
-                paths:
-                    - CitibikeApiProducer/build/
-                    - RawDataSaver/target/
-                    - StationConsumer/target/
-                    - StationTransformerNYC/target/
-            - run:
-                command: ls /home/circleci/project/
-            - save_cache:
-                key: scala-dependencies-{{ checksum "./RawDataSaver/build.sbt" }}-{{ checksum "./StationConsumer/build.sbt"}}-{{ checksum "./StationTransformerNYC/build.sbt"}}
-                paths:
-                    - "~/.ivy2/cache"
-            - save_cache:
-                key: java-dependencies-{{ checksum "./CitibikeApiProducer/build.gradle" }}
-                paths:
-                    - "~/.gradle"
-
     e2e-test:
         <<: *defaults
         steps:
