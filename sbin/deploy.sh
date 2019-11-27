@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -xe
-
+export TRAINING_COHORT=twdu2b
 echo "====Updating SSH Config===="
 
 
@@ -10,23 +10,23 @@ echo "
 	IdentitiesOnly yes
 	ForwardAgent yes
 	DynamicForward 6789
-    StrictHostKeyChecking no
+  StrictHostKeyChecking no
 
-Host emr-master.twdu2b.training
-    User hadoop
+Host emr-master.$TRAINING_COHORT.training
+  User hadoop
 
-Host *.twdu2b.training
+Host *.$TRAINING_COHORT.training
 	ForwardAgent yes
 	ProxyCommand ssh 52.76.28.55 -W %h:%p 2>/dev/null
 	User ec2-user
-    StrictHostKeyChecking no
+  StrictHostKeyChecking no
 " >> ~/.ssh/config
 
 echo "====SSH Config Updated===="
 
 echo "====Insert app config in zookeeper===="
-scp ./zookeeper/seed.sh kafka.twdu2b.training:/tmp/zookeeper-seed.sh
-ssh kafka.twdu2b.training '
+scp ./zookeeper/seed.sh kafka.$TRAINING_COHORT.training:/tmp/zookeeper-seed.sh
+ssh kafka.$TRAINING_COHORT.training '
 set -e
 export hdfs_server="emr-master.twdu2b.training:8020"
 export kafka_server="kafka.twdu2b.training:9092"
@@ -36,10 +36,10 @@ sh /tmp/zookeeper-seed.sh
 echo "====Inserted app config in zookeeper===="
 
 echo "====Copy jar to ingester server===="
-scp CitibikeApiProducer/build/libs/free2wheelers-citibike-apis-producer0.1.0.jar ingester.twdu2b.training:/tmp/
+scp CitibikeApiProducer/build/libs/free2wheelers-citibike-apis-producer0.1.0.jar ingester.$TRAINING_COHORT.training:/tmp/
 echo "====Jar copied to ingester server===="
 
-ssh ingester.twdu2b.training '
+ssh ingester.$TRAINING_COHORT.training '
 set -e
 
 function kill_process {
@@ -78,9 +78,9 @@ echo "====Producers Deployed===="
 
 
 echo "====Configure HDFS paths===="
-scp ./hdfs/seed.sh emr-master.twdu2b.training:/tmp/hdfs-seed.sh
+scp ./hdfs/seed.sh emr-master.$TRAINING_COHORT.training:/tmp/hdfs-seed.sh
 
-ssh emr-master.twdu2b.training '
+ssh emr-master.$TRAINING_COHORT.training '
 set -e
 export hdfs_server="emr-master.twdu2b.training:8020"
 export hadoop_path="hadoop"
@@ -91,12 +91,12 @@ echo "====HDFS paths configured==="
 
 
 echo "====Copy Raw Data Saver Jar to EMR===="
-scp RawDataSaver/target/scala-2.11/free2wheelers-raw-data-saver_2.11-0.0.1.jar emr-master.twdu2b.training:/tmp/
+scp RawDataSaver/target/scala-2.11/free2wheelers-raw-data-saver_2.11-0.0.1.jar emr-master.$TRAINING_COHORT.training:/tmp/
 echo "====Raw Data Saver Jar Copied to EMR===="
 
-scp sbin/go.sh emr-master.twdu2b.training:/tmp/go.sh
+scp sbin/go.sh emr-master.$TRAINING_COHORT.training:/tmp/go.sh
 
-ssh emr-master.twdu2b.training '
+ssh emr-master.$TRAINING_COHORT.training '
 set -e
 
 source /tmp/go.sh
@@ -122,14 +122,14 @@ echo "====Raw Data Saver Deployed===="
 
 
 echo "====Copy Station Consumers Jar to EMR===="
-scp StationConsumer/target/scala-2.11/free2wheelers-station-consumer_2.11-0.0.1.jar emr-master.twdu2b.training:/tmp/
+scp StationConsumer/target/scala-2.11/free2wheelers-station-consumer_2.11-0.0.1.jar emr-master.$TRAINING_COHORT.training:/tmp/
 
-scp StationTransformerNYC/target/scala-2.11/free2wheelers-station-transformer-nyc_2.11-0.0.1.jar emr-master.twdu2b.training:/tmp/
+scp StationTransformerNYC/target/scala-2.11/free2wheelers-station-transformer-nyc_2.11-0.0.1.jar emr-master.$TRAINING_COHORT.training:/tmp/
 echo "====Station Consumers Jar Copied to EMR===="
 
-scp sbin/go.sh emr-master.twdu2b.training:/tmp/go.sh
+scp sbin/go.sh emr-master.$TRAINING_COHORT.training:/tmp/go.sh
 
-ssh emr-master.twdu2b.training '
+ssh emr-master.$TRAINING_COHORT.training '
 set -e
 
 source /tmp/go.sh
