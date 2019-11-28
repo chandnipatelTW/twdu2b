@@ -10,7 +10,6 @@ echo "
 	IdentitiesOnly yes
 	ForwardAgent yes
 	DynamicForward 6789
-  StrictHostKeyChecking no
 
 Host emr-master.$TRAINING_COHORT.training
   User hadoop
@@ -18,7 +17,9 @@ Host emr-master.$TRAINING_COHORT.training
 Host *.twdu2b.training !bastion.twdu2b.training
   User ec2-user
   ForwardAgent yes
-  ProxyCommand ssh -v -A ec2-user@ec2-3-0-229-44.ap-southeast-1.compute.amazonaws.com -W %h:%p 2>/dev/null
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
+  ProxyCommand ssh -A ec2-user@ec2-3-0-229-44.ap-southeast-1.compute.amazonaws.com -W %h:%p 2>/dev/null
 
 Host bastion.twdu2b.training
     User ec2-user
