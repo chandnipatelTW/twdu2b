@@ -15,11 +15,16 @@ echo "
 Host emr-master.$TRAINING_COHORT.training
   User hadoop
 
-Host *.$TRAINING_COHORT.training
-	ForwardAgent yes
-	ProxyCommand ssh -v -A ec2-user@ec2-3-0-229-44.ap-southeast-1.compute.amazonaws.com -W %h:%p 2>/dev/null
-	User ec2-user
-  StrictHostKeyChecking no
+Host *.twdu2b.training !bastion.twdu2b.training
+  User ec2-user
+  ForwardAgent yes
+  ProxyCommand ssh -v -A ec2-user@ec2-3-0-229-44.ap-southeast-1.compute.amazonaws.com -W %h:%p 2>/dev/null
+
+Host bastion.twdu2b.training
+    User ec2-user
+    HostName 3.0.229.44
+    DynamicForward 6789
+
 " >> ~/.ssh/config
 
 echo "====SSH Config Updated===="
@@ -30,7 +35,6 @@ ls -al ./zookeeper/seed.sh
 ls -al ~/.ssh/config
 cat -al ~/.ssh/config
 scp -v -o StrictHostKeyChecking=no ./zookeeper/seed.sh kafka.$TRAINING_COHORT.training:/tmp/zookeeper-seed.sh
-scp -v -o StrictHostKeyChecking=no ./zookeeper/seed.sh kafka.twdu2b.training:/tmp/zookeeper-seed.sh
 ssh kafka.$TRAINING_COHORT.training '
 set -e
 export hdfs_server="emr-master.twdu2b.training:8020"
