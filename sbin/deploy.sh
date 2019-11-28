@@ -25,7 +25,10 @@ Host *.$TRAINING_COHORT.training
 echo "====SSH Config Updated===="
 
 echo "====Insert app config in zookeeper===="
-scp ./zookeeper/seed.sh kafka.$TRAINING_COHORT.training:/tmp/zookeeper-seed.sh -y
+pwd
+ls -al ./zookeeper/seed.sh
+ls -al ~/.ssh/config
+scp -v ./zookeeper/seed.sh kafka.$TRAINING_COHORT.training:/tmp/zookeeper-seed.sh -y
 ssh kafka.$TRAINING_COHORT.training '
 set -e
 export hdfs_server="emr-master.twdu2b.training:8020"
