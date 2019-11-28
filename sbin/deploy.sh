@@ -128,6 +128,8 @@ nohup spark-submit --master yarn --deploy-mode cluster --class com.free2wheelers
 echo "====Raw Data Saver Deployed===="
 '
 
+echo "====Copy Monitoring Job Jar to EMR===="
+scp Monitoring/target/scala-2.11/free2wheelers-monitoring_2.11-0.0.1.jar emr-master.$TRAINING_COHORT.training:/tmp/
 
 echo "====Copy Station Consumers Jar to EMR===="
 scp StationConsumer/target/scala-2.11/free2wheelers-station-consumer_2.11-0.0.1.jar emr-master.$TRAINING_COHORT.training:/tmp/
