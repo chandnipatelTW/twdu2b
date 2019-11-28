@@ -14,3 +14,7 @@ sbt package
 cd $DIR/../StationTransformerNYC
 sbt test
 sbt package
+echo "====Building Monitoring JARs===="
+cd $DIR/../Monitoring
+sbt test
+sbt package
