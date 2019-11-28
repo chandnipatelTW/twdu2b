@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 
 TRAINING_GROUP=twdu2b
-WAITING_TIME_SECONDS=60
 
 MESSAGE_TO_WRITE_IN_KAFKA=$(cat <<EOF
 {
   "payload": {
     "network": {
       "company": [
-        "JCDecaux"
+        "TwoWheelers"
       ],
       "href": "/v2/networks/test",
       "id": "test",
@@ -17,8 +16,8 @@ MESSAGE_TO_WRITE_IN_KAFKA=$(cat <<EOF
         "url": "https://developer.jcdecaux.com/#/opendata/licence"
       },
       "location": {
-        "city": "Marseille",
-        "country": "FR",
+        "city": "Bangalore",
+        "country": "IN",
         "latitude": 43.296482,
         "longitude": 5.36978
       },
@@ -37,10 +36,10 @@ MESSAGE_TO_WRITE_IN_KAFKA=$(cat <<EOF
             "uid": 8149
           },
           "free_bikes": 3,
-          "id": "686e48654a218c70daf950a4e893e5b0",
+          "id": "TestID",
           "latitude": 43.25402727813068,
           "longitude": 5.401873594694653,
-          "name": "8149-391 MICHELET",
+          "name": "TestStationData",
           "timestamp": "2019-11-26T07:48:28.419000Z"
         }
       ]
@@ -55,17 +54,13 @@ function kafkaPublishMessageTest () {
     echo "1. Test: Kafka publish message"
     echo "============================="
 
-	echo 'Message to write: '
-	echo "$MESSAGE_TO_WRITE_IN_KAFKA"
-		
-	# Executing in a container env
-	kafka_container=streamingdatapipeline_kafka_1
-	docker exec "$kafka_container" sh -c "echo '$MESSAGE_TO_WRITE_IN_KAFKA' | /opt/kafka_2.11-0.10.0.1/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic station_data_test" 
+    echo 'Message to write: '
+    echo "$MESSAGE_TO_WRITE_IN_KAFKA"
 
-	# TODO: Executing in a remote AWS Kafka instance
-	#ssh kafka."$TRAINING_GROUP".training << EOF
-  	#	kafka-console-producer --broker-list localhost:9092 --topic "station_data_test" <<< "$JSON_DATA_TEST"
-	#EOF
+ssh kafka."$TRAINING_GROUP".training << 'kafkaTestCommand'
+kafka-console-producer --broker-list localhost:9092 --topic "station_data_test" <<< "$JSON_DATA_TEST"
+logout
+kafkaTestCommand
 		
     if [ $? -eq 1 ]
     then
@@ -82,14 +77,9 @@ function validateOutputCSVFromHDFS () {
     echo "2. Validate output CSV from HDFS"
     echo "==============================="
 
-	# Executing in a container env
-	hadoop_container=streamingdatapipeline_hadoop_1
-	result=$(docker exec "$hadoop_container" sh -c './usr/local/hadoop/bin/hadoop fs -cat /free2wheelers/stationMart/data/part-*.csv | grep TestStationData')
-
-	# TODO: Executing in a remote AWS EMR instance
-	#ssh emr-master."$TRAINING_GROUP".training << EOF
-  	#	result=$(hadoop fs -cat /free2wheelers/stationMart/data/part-*.csv | grep TestStationData)
-	#EOF
+ssh emr-master."$TRAINING_GROUP".training << 'HDFSTestCommand'
+result=$(hadoop fs -cat /free2wheelers/stationMart/data/part-*.csv | grep TestStationData)
+HDFSTestCommand
 
 	if [ -z "$result" ]
     then
