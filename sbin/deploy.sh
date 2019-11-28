@@ -28,7 +28,7 @@ echo "====Insert app config in zookeeper===="
 pwd
 ls -al ./zookeeper/seed.sh
 ls -al ~/.ssh/config
-scp -v ./zookeeper/seed.sh kafka.$TRAINING_COHORT.training:/tmp/zookeeper-seed.sh
+scp -v -o StrictHostKeyChecking=no ./zookeeper/seed.sh kafka.$TRAINING_COHORT.training:/tmp/zookeeper-seed.sh
 ssh kafka.$TRAINING_COHORT.training '
 set -e
 export hdfs_server="emr-master.twdu2b.training:8020"
