@@ -25,6 +25,7 @@ jobs:
                     - StationConsumer/target/
                     - StationTransformerNYC/target/
                     - Monitoring/target/
+                    - Monitoring/src/main/resources/scripts/
             - run:
                 command: ls /home/circleci/project/
             - save_cache:
