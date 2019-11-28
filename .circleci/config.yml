@@ -24,6 +24,7 @@ jobs:
                     - RawDataSaver/target/
                     - StationConsumer/target/
                     - StationTransformerNYC/target/
+                    - Monitoring/target/
             - run:
                 command: ls /home/circleci/project/
             - save_cache:
