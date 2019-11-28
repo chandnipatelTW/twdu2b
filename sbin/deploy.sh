@@ -31,7 +31,6 @@ echo "====SSH Config Updated===="
 
 echo "====Insert app config in zookeeper===="
 ls -al ~/.ssh/config
-scp -v -o StrictHostKeyChecking=no ./zookeeper/seed.sh kafka.$TRAINING_COHORT.training:/tmp/zookeeper-seed.sh
 scp -v -o StrictHostKeyChecking=no ./zookeeper/seed.sh kafka.twdu2b.training:/tmp/zookeeper-seed.sh
 ssh kafka.$TRAINING_COHORT.training '
 set -e
