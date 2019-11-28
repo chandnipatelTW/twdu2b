@@ -32,6 +32,7 @@ echo "====SSH Config Updated===="
 
 echo "====Insert app config in zookeeper===="
 ls -al ~/.ssh/config
+ssh-keyscan -H ec2-3-0-229-44.ap-southeast-1.compute.amazonaws.com >> ~/.ssh/known_hosts
 scp -v -o StrictHostKeyChecking=no ./zookeeper/seed.sh kafka.twdu2b.training:/tmp/zookeeper-seed.sh
 ssh kafka.$TRAINING_COHORT.training '
 set -e
