@@ -33,7 +33,6 @@ echo "====Insert app config in zookeeper===="
 pwd
 ls -al ./zookeeper/seed.sh
 ls -al ~/.ssh/config
-cat -al ~/.ssh/config
 scp -v -o StrictHostKeyChecking=no ./zookeeper/seed.sh kafka.$TRAINING_COHORT.training:/tmp/zookeeper-seed.sh
 ssh kafka.$TRAINING_COHORT.training '
 set -e
