@@ -77,14 +77,19 @@ function kafkaPublishMessageTest () {
 
 }
 
-function getOutputCSVFromHDFS () {
-	echo "============================="
-    echo "Get output CSV from HDFS     "
-    echo "============================="
+function validateOutputCSVFromHDFS () {
+	  echo "==============================="
+    echo "2. Validate output CSV from HDFS"
+    echo "==============================="
 
 	# Executing in a container env
 	hadoop_container=streamingdatapipeline_hadoop_1
 	result=$(docker exec "$hadoop_container" sh -c './usr/local/hadoop/bin/hadoop fs -cat /free2wheelers/stationMart/data/part-*.csv | grep TestStationData')
+
+	# TODO: Executing in a remote AWS EMR instance
+	#ssh emr-master."$TRAINING_GROUP".training << EOF
+  	#	result=$(hadoop fs -cat /free2wheelers/stationMart/data/part-*.csv | grep TestStationData)
+	#EOF
 
 	if [ -z "$result" ]
     then
@@ -93,8 +98,7 @@ function getOutputCSVFromHDFS () {
     else
         echo "Sucess: Previous message processed! yay!!!!!"
     fi
-	# TODO: Executing in a remote EMR instance
-	#ssh emr-master."$TRAINING_GROUP".training 
+
 }
 
 echo "============================="
@@ -102,4 +106,4 @@ echo "TwoWheelers E2E Test"
 echo "============================="
 
 kafkaPublishMessageTest
-getOutputCSVFromHDFS
+validateOutputCSVFromHDFS
