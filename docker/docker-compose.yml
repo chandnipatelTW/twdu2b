@@ -19,6 +19,8 @@ services:
         command: "/etc/bootstrap.sh -d"
         networks:
           - streaming-data-internal
+        volumes:
+          - ../Monitoring/target/:/jobs/
         ports:
           - "50070:50070"
           - "50075:50075"
