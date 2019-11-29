@@ -3,8 +3,9 @@ package com.free2wheelers.apps
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.apache.spark.sql.SparkSession
+import org.apache.curator.framework.CuratorFrameworkFactory
+import org.apache.curator.retry.ExponentialBackoffRetry
 import org.apache.spark.sql._
-import org.apache.spark.sql.types.IntegerType
 
 object MonitoringApp {
   val log : Logger = LoggerFactory.getLogger(this.getClass);
@@ -70,9 +71,22 @@ object MonitoringApp {
 
     import spark.implicits._
 
+    val zookeeperConnectionString = if (args.isEmpty) "zookeeper:2181" else args(0)
+
+    val retryPolicy = new ExponentialBackoffRetry(1000, 3)
+
+    val zkClient = CuratorFrameworkFactory.newClient(zookeeperConnectionString, retryPolicy)
+
+    zkClient.start()
+
+
+    val inputLocation = new String(
+      zkClient.getData.watched.forPath("/free2wheelers/output/dataLocation"))
+
+
     val df = spark.read.format("csv")
       .option("header", "true")
-      .load("./src/test/resources/test.csv")
+      .load(inputLocation)
 
     spark.stop()
   }
