@@ -26,6 +26,28 @@ object MonitoringApp {
     df.filter($"docks_available" < 0).as[Entry]
   }
 
+  def entriesWithInvalidAvailableBikes(df: DataFrame, spark: SparkSession): Dataset[Entry] = {
+    import spark.implicits._
+
+    df.filter($"bikes_available" < 0).as[Entry]
+  }
+
+  def entriesWithInvalidCoordinates(df: DataFrame, spark: SparkSession): Dataset[Entry] = {
+    import spark.implicits._
+
+    df.filter(isOutsideOfNYC($"latitude", $"longitude") && isOutsideOfSF($"latitude", $"longitude")).as[Entry]
+  }
+
+  def isOutsideOfNYC(latitude: Column, longitude: Column) : Column = {
+
+    (latitude < 40 || latitude > 41 ) || (longitude > -73.5 || longitude < -74)
+  }
+
+  def isOutsideOfSF(latitude: Column, longitude: Column) : Column = {
+
+    (latitude < 37 || latitude > 38 ) || (longitude > -122 || longitude < -123)
+  }
+
   def validate(df: DataFrame, spark: SparkSession): Array[Error] = {
     import spark.implicits._
 

@@ -1,0 +1,4 @@
+bikes_available,docks_available,is_renting,is_returning,last_updated,station_id,name,latitude,longitude
+8,4,true,true,1574915049,0ff3bf339e08df67475b40f9ea275674,Gardenish,37.785064,-122.402946
+9,10,true,true,1574915050,chl0ef339e08df67475b40f9ea275674,Churchish,37.785929,-122.411336
+12,4,true,true,1574915050,70efc46e03c990180a35965f9b1ac98c,ThoughtWorksish,37.784471,-122.404791
