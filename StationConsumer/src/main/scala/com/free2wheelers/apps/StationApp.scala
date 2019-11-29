@@ -1,5 +1,7 @@
 package com.free2wheelers.apps
 
+import java.sql.Timestamp
+
 import com.free2wheelers.apps.StationStatusTransformation._
 import org.apache.curator.framework.CuratorFrameworkFactory
 import org.apache.curator.retry.ExponentialBackoffRetry
@@ -34,6 +36,10 @@ object StationApp {
 
     import spark.implicits._
 
+    val convertTimestampToISO = (timestamp: Timestamp) => {
+      timestamp.toInstant.toString
+    }
+
     val nycStationDF = spark.readStream
       .format("kafka")
       .option("kafka.bootstrap.servers", stationKafkaBrokers)
@@ -52,12 +58,17 @@ object StationApp {
       .selectExpr("CAST(value AS STRING) as raw_payload")
       .transform(sfStationStatusJson2DF(_, spark))
 
+    spark.udf.register("convertTimestampToISO", convertTimestampToISO)
+
+    import org.apache.spark.sql.functions.callUDF
+
     nycStationDF
       .union(sfStationDF)
       .as[StationStatus]
       .groupByKey(r=>r.station_id)
-      .reduceGroups((r1,r2)=>if (r1.last_updated > r2.last_updated) r1 else r2)
+      .reduceGroups((r1,r2)=>if (r1.last_updated.compareTo(r2.last_updated) > 0 ) r1 else r2)
       .map(_._2)
+      .withColumn("last_updated", callUDF("convertTimestampToISO", $"last_updated"))
       .writeStream
       .format("overwriteCSV")
       .outputMode("complete")

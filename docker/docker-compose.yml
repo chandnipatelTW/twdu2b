@@ -14,10 +14,12 @@ services:
           - zookeeper
 
     hadoop:
-        image: sequenceiq/hadoop-docker:2.7.0
-        command: "/etc/bootstrap.sh -d"
+        image: gettyimages/spark
+        container_name: streamingdatapipeline_spark-hadoop
         networks:
           - streaming-data-internal
+        volumes:
+          - ../Monitoring/target/scala-2.11/:/jobs/
         ports:
           - "50070:50070"
           - "50075:50075"

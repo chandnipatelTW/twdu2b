@@ -9,7 +9,7 @@ settings(
     version := "0.0.1"
   )),
 
-  name := "free2wheelers-monitor",
+  name := "free2wheelers-monitoring",
   libraryDependencies ++= Seq(
     "org.apache.spark" %% "spark-core" % sparkVersion,
     "org.apache.spark" %% "spark-sql" % sparkVersion,

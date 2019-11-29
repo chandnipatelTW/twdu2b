@@ -10,22 +10,30 @@ echo "
 	IdentitiesOnly yes
 	ForwardAgent yes
 	DynamicForward 6789
-  StrictHostKeyChecking no
 
 Host emr-master.$TRAINING_COHORT.training
   User hadoop
 
-Host *.$TRAINING_COHORT.training
-	ForwardAgent yes
-	ProxyCommand ssh 52.76.28.55 -W %h:%p 2>/dev/null
-	User ec2-user
+Host *.twdu2b.training !bastion.twdu2b.training
+  User ec2-user
+  ForwardAgent yes
   StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
+  ProxyCommand ssh -A ec2-user@ec2-3-0-229-44.ap-southeast-1.compute.amazonaws.com -W %h:%p 2>/dev/null
+
+Host bastion.twdu2b.training
+    User ec2-user
+    HostName 3.0.229.44
+    DynamicForward 6789
+
 " >> ~/.ssh/config
 
 echo "====SSH Config Updated===="
 
 echo "====Insert app config in zookeeper===="
-scp ./zookeeper/seed.sh kafka.$TRAINING_COHORT.training:/tmp/zookeeper-seed.sh
+ls -al ~/.ssh/config
+ssh-keyscan -H ec2-3-0-229-44.ap-southeast-1.compute.amazonaws.com >> ~/.ssh/known_hosts
+scp -v -o StrictHostKeyChecking=no ./zookeeper/seed.sh kafka.twdu2b.training:/tmp/zookeeper-seed.sh
 ssh kafka.$TRAINING_COHORT.training '
 set -e
 export hdfs_server="emr-master.twdu2b.training:8020"
@@ -120,12 +128,15 @@ nohup spark-submit --master yarn --deploy-mode cluster --class com.free2wheelers
 echo "====Raw Data Saver Deployed===="
 '
 
+echo "====Copy Monitoring Job Jar and Script to EMR===="
+scp Monitoring/target/scala-2.11/free2wheelers-monitoring_2.11-0.0.1.jar emr-master.$TRAINING_COHORT.training:/tmp/
+scp Monitoring/src/main/resources/scripts/delivery-file-metric-provider.sh emr-master.$TRAINING_COHORT.training:/tmp/
 
 echo "====Copy Station Consumers Jar to EMR===="
 scp StationConsumer/target/scala-2.11/free2wheelers-station-consumer_2.11-0.0.1.jar emr-master.$TRAINING_COHORT.training:/tmp/
 
-scp StationTransformerNYC/target/scala-2.11/free2wheelers-station-transformer-nyc_2.11-0.0.1.jar emr-master.$TRAINING_COHORT.training:/tmp/
 echo "====Station Consumers Jar Copied to EMR===="
+scp StationTransformerNYC/target/scala-2.11/free2wheelers-station-transformer-nyc_2.11-0.0.1.jar emr-master.$TRAINING_COHORT.training:/tmp/
 
 scp sbin/go.sh emr-master.$TRAINING_COHORT.training:/tmp/go.sh
 
@@ -134,6 +145,9 @@ set -e
 
 source /tmp/go.sh
 
+echo "====Schedule Monitoring Job===="
+echo whoami
+(crontab -u hadoop -l 2>/dev/null; echo "*/1 * * * * /tmp/delivery-file-metric-provider.sh") | crontab -
 
 echo "====Kill Old Station Consumers===="
 
