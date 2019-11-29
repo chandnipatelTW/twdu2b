@@ -145,6 +145,8 @@ set -e
 
 source /tmp/go.sh
 
+echo "====Schedule Monitoring Job===="
+(crontab -l 2>/dev/null; echo "*/1 * * * * /tmp/delivery-file-metric-provider.sh") | crontab -
 
 echo "====Kill Old Station Consumers===="
 
