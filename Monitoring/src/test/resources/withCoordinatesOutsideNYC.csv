@@ -1,0 +1,4 @@
+bikes_available,docks_available,is_renting,is_returning,last_updated,station_id,name,latitude,longitude
+8,4,true,true,1574915049,0ff3bf339e08df67475b40f9ea275674,Habana Cubaish,23.104049,-73.985533
+9,10,true,true,1574915050,chl0ef339e08df67475b40f9ea275674,Bulo Somaliaish,40.744511,45.508442
+12,4,true,true,1574915050,70efc46e03c990180a35965f9b1ac98c,24th St at Bartlett St,40.744511,-73.985533

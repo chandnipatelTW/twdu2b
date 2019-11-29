@@ -1,0 +1,4 @@
+bikes_available,docks_available,is_renting,is_returning,last_updated,station_id,name,latitude,longitude
+8,-4,true,true,1574915049,0ff3bf339e08df67475b40f9ea275674,Natoma St at New Montgomery St,37.78655306258097,-122.39960700273514
+9,10,true,true,1574915050,chl0ef339e08df67475b40f9ea275674,Webster St at Clay St,37.79080303242391,-122.43259012699126
+12,4,true,true,1574915050,70efc46e03c990180a35965f9b1ac98c,24th St at Bartlett St,37.752104984423575,-122.41972357034683
