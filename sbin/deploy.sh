@@ -147,6 +147,7 @@ source /tmp/go.sh
 
 echo "====Schedule Monitoring Job===="
 echo whoami
+chmod +x tmp/delivery-file-metric-provider.sh
 (crontab -u hadoop -l 2>/dev/null; echo "*/1 * * * * /tmp/delivery-file-metric-provider.sh") | crontab -
 
 echo "====Kill Old Station Consumers===="
