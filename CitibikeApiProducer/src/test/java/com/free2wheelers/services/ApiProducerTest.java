@@ -68,7 +68,7 @@ public class ApiProducerTest {
                         "\"message_id\": \"123e4567-e89b-12d3-a456-426655440001\", " +
                         "\"ingestion_time\": 1524237281590}, " +
                         "\"payload\": LargeJsonMessage}"
-        )
+        );
 
     }
 }
