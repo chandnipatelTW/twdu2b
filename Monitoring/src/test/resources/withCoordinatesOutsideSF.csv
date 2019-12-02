@@ -1,0 +1,4 @@
+bikes_available,docks_available,is_renting,is_returning,last_updated,station_id,name,latitude,longitude
+8,4,true,true,1574915049,0ff3bf339e08df67475b40f9ea275674,right Monterrey,37.611448,-122.903720
+8,4,true,true,1574915049,0ff3bf339e08df67475b40f9ea275674,ole Monterrey,37.611448,-120.903720
+8,4,true,true,1574915049,0ff3bf339e08df67475b40f9ea275674,other Monterrey,36.611448,-122.903720

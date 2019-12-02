@@ -1,0 +1,4 @@
+bikes_available,docks_available,is_renting,is_returning,last_updated,station_id,name,latitude,longitude
+8,4,true,true,1574915049,0ff3bf339e08df67475b40f9ea275674,Queensish,40.748628,-73.873236
+9,10,true,true,1574915050,chl0ef339e08df67475b40f9ea275674,Broolynish,40.671747,-73.941652
+12,4,true,true,1574915050,70efc46e03c990180a35965f9b1ac98c,ThoughtWorksish,40.744511,-73.985533
