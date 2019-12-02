@@ -174,7 +174,7 @@ class StationInformationTransformationTest extends FeatureSpec with Matchers wit
 
       val row1 = resultDF2.where("station_id = '0d1cc38593e42fd252223058f5e2a1e3'").head()
       row1.get(0) should be("0d1cc38593e42fd252223058f5e2a1e3")
-      row1.get(1) should be("Koshland Park")
+      row1.get(1) should be("Koshland Par")
       row1.get(2) should be(37.77341396997343)
       row1.get(3) should be(-122.42731690406801)
       row1.get(4) should be(1535551137)
