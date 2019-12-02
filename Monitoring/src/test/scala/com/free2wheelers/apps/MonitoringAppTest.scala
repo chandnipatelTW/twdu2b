@@ -99,7 +99,7 @@ class MonitoringAppTest extends FeatureSpec with Matchers with GivenWhenThen {
     "0ff3bf339e08df67475b40f9ea275674",
     "ole Monterrey",
     "37.611448",
-    "-121.903720"
+    "-120.903720"
   )
 
   val entryWithLatitudeOutsideSF = Entry(
