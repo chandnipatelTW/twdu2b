@@ -114,6 +114,21 @@ class MonitoringAppTest extends FeatureSpec with Matchers with GivenWhenThen {
     "-122.903720"
   )
 
+  feature("Validate input file") {
+    scenario("Returns empty set for valid input") {
+      Given("Valid input")
+      val testDF = spark.read.format("csv")
+        .option("header", "true")
+        .load("./src/test/resources/test.csv")
+
+      When("Executing validate")
+      val rowsInError = validate(testDF, spark)
+
+      Then("No rows should be returned")
+      rowsInError should be(empty)
+    }
+  }
+
   feature("Validate station_id is unique") {
     scenario("Returns false when station_id's are not unique") {
       Given("Data with duplicate station_id")

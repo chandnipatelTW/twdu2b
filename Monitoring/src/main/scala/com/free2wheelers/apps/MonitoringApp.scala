@@ -46,11 +46,10 @@ object MonitoringApp {
 
   def isOutsideOfSF(latitude: Column, longitude: Column) : Column = {
 
-    (latitude < 37 || latitude > 38 ) || (longitude > -122 || longitude < -123)
+    (latitude < 37 || latitude > 38 ) || (longitude > -121 || longitude < -123)
   }
 
   def validate(df: DataFrame, spark: SparkSession): Array[Error] = {
-    import spark.implicits._
 
     val stationDuplicateError = Error(
       "Duplicate station_id",
@@ -61,7 +60,15 @@ object MonitoringApp {
       entriesWithInvalidAvailableDocks(df, spark).collect
     )
 
-    Array(stationDuplicateError, invalidDocksError).filter((error) => error.entries.length > 0)
+    val invalidBikesAvailableError = Error(
+      "Invalid bikes_available",
+      entriesWithInvalidAvailableBikes(df, spark).collect
+    )
+
+    val outOfValidRegion = Error("Coordinates are out of valid region", entriesWithInvalidCoordinates(df, spark).collect())
+
+    val response = Array(stationDuplicateError, invalidDocksError, outOfValidRegion, invalidBikesAvailableError).filter((error) => error.entries.length > 0)
+    response
   }
 
   def main(args: Array[String]): Unit = {
@@ -69,7 +76,6 @@ object MonitoringApp {
       .appName("MonitoringApp")
       .getOrCreate()
 
-    import spark.implicits._
 
     val zookeeperConnectionString = if (args.isEmpty) "zookeeper:2181" else args(0)
 
@@ -83,10 +89,9 @@ object MonitoringApp {
     val inputLocation = new String(
       zkClient.getData.watched.forPath("/free2wheelers/output/dataLocation"))
 
-
-    val df = spark.read.format("csv")
+    validate(spark.read.format("csv")
       .option("header", "true")
-      .load(inputLocation)
+      .load(inputLocation), spark)
 
     spark.stop()
   }
