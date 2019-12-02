@@ -38,7 +38,7 @@ class StationStatusTransformationTest extends FeatureSpec with Matchers with Giv
       val resultDF1 = testDF1.transform(nycStationStatusJson2DF(_, spark))
 
       Then("Useful columns are extracted")
-      resultDF1.schema.fields(0).name should be("bike_available")
+      resultDF1.schema.fields(0).name should be("bikes_available")
       resultDF1.schema.fields(0).dataType.typeName should be("integer")
       resultDF1.schema.fields(1).name should be("docks_available")
       resultDF1.schema.fields(1).dataType.typeName should be("integer")
