@@ -14,8 +14,9 @@ services:
           - zookeeper
 
     hadoop:
-        image: gettyimages/spark
+        image: aghorbani/spark
         container_name: streamingdatapipeline_spark-hadoop
+        command: "/etc/bootstrap.sh -d"
         networks:
           - streaming-data-internal
         volumes:
