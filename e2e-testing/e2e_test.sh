@@ -74,8 +74,28 @@ kafkaTestCommand
 
 }
 
+function shouldReturnNotEmptyWhenRetrieveTheHDFSFile () {
+	  echo "==============================="
+    echo "2. Validate output CSV from HDFS"
+    echo "==============================="
+
+ssh emr-master."$TRAINING_GROUP".training << 'HDFSTestCommand'
+result=$(hadoop fs -cat /free2wheelers/stationMart/data/part-*.csv | grep TestStationData)
+HDFSTestCommand
+
+	if [ -z "$result" ]
+    then
+        echo "Failure: Previous message was not processed"
+        exit 1
+    else
+        echo "Sucess: Previous message processed! yay!!!!!"
+    fi
+
+}
+
 echo "============================="
 echo "TwoWheelers E2E Test"
 echo "============================="
 
 shouldReturnValidStatusWhenKafkaProducerWriteValidMessageInTopic
+shouldReturnNotEmptyWhenRetrieveTheHDFSFile
