@@ -3,6 +3,7 @@ package com.free2wheelers.apps
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 
+import com.free2wheelers.apps.StationInformationTransformation.log
 import org.apache.spark.sql.expressions.UserDefinedFunction
 import org.apache.spark.sql.functions.{udf, _}
 import org.apache.spark.sql.{DataFrame, SparkSession}
@@ -35,13 +36,19 @@ object StationStatusTransformation {
 
   val toStationStatus: String => Seq[StationStatus] = raw_payload => {
     val json = JSON.parseFull(raw_payload)
-    val metadata = json.get.asInstanceOf[Map[String, Any]]("metadata").asInstanceOf[Map[String, String]]
-    val producerId = metadata("producer_id")
+    try {
+      val metadata = json.get.asInstanceOf[Map[String, Any]]("metadata").asInstanceOf[Map[String, String]]
+      val producerId = metadata("producer_id")
 
-    val payload = json.get.asInstanceOf[Map[String, Any]]("payload")
-    producerId match {
-      case "producer_station-san_francisco" => extractSFStationStatus(payload)
-      case "producer_station_status" => extractNycStationStatus(payload)
+      val payload = json.get.asInstanceOf[Map[String, Any]]("payload")
+      producerId match {
+        case "producer_station-san_francisco" => extractSFStationStatus(payload)
+        case "producer_station_status" => extractNycStationStatus(payload)
+      }
+    }
+    catch {
+      case e: Exception => log.warn("- StationTransformationNYC:" + e.getMessage, raw_payload)
+        Seq()
     }
   }
 
