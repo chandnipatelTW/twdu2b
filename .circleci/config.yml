@@ -57,7 +57,7 @@ jobs:
                 at: /home/circleci/project
             - add_ssh_keys:
                 fingerprints:
-                    - "9f:64:eb:f4:59:f0:09:be:43:67:96:0e:c3:3b:e6:cd"
+                    - "6e:da:45:56:b8:7d:7f:03:9e:67:1f:ba:7a:65:d8:f8"
             - run:
                 command: ./e2e-test/e2e.sh     
 
