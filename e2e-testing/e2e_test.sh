@@ -60,7 +60,7 @@ function shouldReturnValidStatusWhenKafkaProducerWriteValidMessageInTopic () {
     echo "$VALID_MESSAGE_TO_WRITE_IN_KAFKA"
 
 ssh kafka."$TRAINING_GROUP".training << 'kafkaTestCommand'
-kafka-console-producer --broker-list localhost:9092 --topic station_data_test <<< "$VALID_MESSAGE_TO_WRITE_IN_KAFKA"
+kafka-console-producer --broker-list localhost:9092 --topic station_data_sf <<< "$VALID_MESSAGE_TO_WRITE_IN_KAFKA"
 logout
 kafkaTestCommand
 		
@@ -81,7 +81,11 @@ function shouldReturnNotEmptyWhenRetrieveTheHDFSFile () {
 
 ssh emr-master."$TRAINING_GROUP".training << 'HDFSTestCommand'
 result=$(hadoop fs -cat /free2wheelers/stationMart/data/part-*.csv | grep TestStationData)
+logout
 HDFSTestCommand
+
+  echo 'Content of the file: '
+  echo "$result"
 
 	if [ -z "$result" ]
     then
