@@ -8,15 +8,23 @@ import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.expressions.UserDefinedFunction
 import org.apache.spark.sql.functions.{udf, _}
 import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.slf4j.{Logger, LoggerFactory}
 
 import scala.util.parsing.json.JSON
 
 object StationStatusTransformation {
 
+  val log : Logger = LoggerFactory.getLogger(this.getClass)
+
   val sfToStationStatus: String => Seq[StationStatus] = raw_payload => {
-    val json = JSON.parseFull(raw_payload)
-    val payload = json.get.asInstanceOf[Map[String, Any]]("payload")
-    extractSFStationStatus(payload)
+      val json: Option[Any] = JSON.parseFull(raw_payload)
+      try {
+        val payload = json.get.asInstanceOf[Map[String, Any]]("payload")
+        extractSFStationStatus(payload)
+      } catch {
+        case e: Exception => log.warn( "- StationConsumer:"  + e.getMessage, raw_payload)
+          Seq()
+      }
   }
 
   private def extractSFStationStatus(payload: Any) = {
