@@ -6,10 +6,13 @@ import java.time.format.DateTimeFormatter
 import org.apache.spark.sql.expressions.UserDefinedFunction
 import org.apache.spark.sql.functions.{explode, udf}
 import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.slf4j.{Logger, LoggerFactory}
 
 import scala.util.parsing.json.JSON
 
 object StationInformationTransformation {
+
+  val log : Logger = LoggerFactory.getLogger(this.getClass)
 
   case class StationInformation(
                                  station_id: String,
@@ -21,13 +24,19 @@ object StationInformationTransformation {
 
   val toStationInformation: String => Seq[StationInformation] = raw_payload => {
     val json = JSON.parseFull(raw_payload)
-    val metadata = json.get.asInstanceOf[Map[String, Any]]("metadata").asInstanceOf[Map[String, String]]
-    val producerId = metadata("producer_id")
+    try {
+      val metadata = json.get.asInstanceOf[Map[String, Any]]("metadata").asInstanceOf[Map[String, String]]
+      val producerId = metadata("producer_id")
 
-    val payload = json.get.asInstanceOf[Map[String, Any]]("payload")
-    producerId match {
-      case "producer_station_information" => extractNycStationInformation(payload)
-      case "producer_station-san_francisco" => extractSFStationInformation(payload)
+      val payload = json.get.asInstanceOf[Map[String, Any]]("payload")
+      producerId match {
+        case "producer_station_information" => extractNycStationInformation(payload)
+        case "producer_station-san_francisco" => extractSFStationInformation(payload)
+      }
+    }
+    catch {
+      case e: Exception => log.warn( "- StationTransformationNYC:"  + e.getMessage, raw_payload)
+        Seq()
     }
   }
 

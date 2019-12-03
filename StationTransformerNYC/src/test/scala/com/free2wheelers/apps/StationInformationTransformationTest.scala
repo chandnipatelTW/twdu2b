@@ -11,7 +11,7 @@ class StationInformationTransformationTest extends FeatureSpec with Matchers wit
 
     scenario("Transform station_information data frame and extract useful fields") {
 
-      val testStationInformationData =
+      val testStationInformationData  =
         """{
         "metadata": {
           "producer_id": "producer_station_information",
@@ -92,7 +92,22 @@ class StationInformationTransformationTest extends FeatureSpec with Matchers wit
       row1.get(4) should be(1524600463)
     }
 
-    scenario("Transform station_information data frame and extract useful fields of SF") {
+      scenario("Transform station_information data frame when kafka message is empty") {
+
+        val testStationInformationData  = ""
+
+        Given("Sample data for station_information")
+        val testDF2 = Seq(testStationInformationData).toDF("raw_payload")
+
+        When("Transformations are applied")
+        val resultDF2 = stationInformationJson2DF(testDF2, spark)
+
+        Then("Data frame should also be empty")
+         resultDF2.count() should be(0)
+      }
+
+
+        scenario("Transform station_information data frame and extract useful fields of SF") {
       val sfStationInformationData =
         """{
         "metadata": {
