@@ -31,7 +31,7 @@ echo "====SSH Config Updated===="
 echo "====Insert app config in zookeeper===="
 ls -al ~/.ssh/config
 ssh-keyscan -H 13.232.117.128 >> ~/.ssh/known_hosts
-scp ./zookeeper/seed.sh kafka.$TRAINING_COHORT.training:/tmp/zookeeper-seed.sh
+scp -o StrictHostKeyChecking=no ./zookeeper/seed.sh kafka.$TRAINING_COHORT.training:/tmp/zookeeper-seed.sh
 ssh kafka.$TRAINING_COHORT.training '
 set -e
 export hdfs_server="emr-master.gcube.training:8020"
