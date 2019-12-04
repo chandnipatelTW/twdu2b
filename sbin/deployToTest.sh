@@ -129,7 +129,7 @@ echo "====Raw Data Saver Deployed===="
 echo "====Copy Monitoring Job Jar and Script to EMR===="
 scp Monitoring/target/scala-2.11/free2wheelers-monitoring_2.11-0.0.1.jar emr-master.$TRAINING_COHORT.training:/tmp/
 scp Monitoring/src/main/resources/scripts/delivery-file-metric-provider.sh emr-master.$TRAINING_COHORT.training:/tmp/
-scp -o StrictHostKeyChecking=no -r airflow/dags airflow.gcube.training:~/airflow/dags
+#scp -o StrictHostKeyChecking=no -r airflow/dags airflow.gcube.training:~/airflow/dags
 
 echo "====Copy Station Consumers Jar to EMR===="
 scp StationConsumer/target/scala-2.11/free2wheelers-station-consumer_2.11-0.0.1.jar emr-master.$TRAINING_COHORT.training:/tmp/
