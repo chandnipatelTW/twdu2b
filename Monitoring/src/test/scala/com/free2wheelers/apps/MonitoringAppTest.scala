@@ -8,15 +8,13 @@ import com.free2wheelers.apps.MonitoringApp.{
   Entry,
   validate
 }
-import org.apache.spark.sql._
+
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.catalyst.ScalaReflection
 import org.scalatest._
 
 class MonitoringAppTest extends FeatureSpec with Matchers with GivenWhenThen {
 
   val spark = SparkSession.builder.appName("Test App").master("local").getOrCreate()
-  import spark.implicits._
 
   val entryDuplicateStationIds1 = Entry(
     "8",

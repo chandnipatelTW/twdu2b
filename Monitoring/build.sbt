@@ -14,6 +14,7 @@ settings(
     "org.apache.spark" %% "spark-core" % sparkVersion,
     "org.apache.spark" %% "spark-sql" % sparkVersion,
     "org.apache.spark" %% "spark-streaming" % sparkVersion,
-    "org.scalatest" %% "scalatest" % "3.0.5" % "test"
+    "org.scalatest" %% "scalatest" % "3.0.5" % "test",
+    "software.amazon.awssdk" % "aws-sdk-java" % "2.0.0-preview-1"
   )
 )

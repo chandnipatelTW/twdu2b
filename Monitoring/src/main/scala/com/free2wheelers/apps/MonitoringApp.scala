@@ -1,11 +1,14 @@
 package com.free2wheelers.apps
 
+
+import software.amazon.awssdk.services.cloudwatch.model.{MetricDatum, PutMetricDataRequest}
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.apache.spark.sql.SparkSession
 import org.apache.curator.framework.CuratorFrameworkFactory
 import org.apache.curator.retry.ExponentialBackoffRetry
 import org.apache.spark.sql._
+import software.amazon.awssdk.services.cloudwatch.CloudWatchClient
 
 object MonitoringApp {
   val log : Logger = LoggerFactory.getLogger(this.getClass);
@@ -71,6 +74,28 @@ object MonitoringApp {
     response
   }
 
+  def sendMetricsToCloudWatch(monitoringResults: Array[Error]) = {
+    val metricPutRequest = createCloudWatchMetricRequest(monitoringResults)
+    CloudWatchClient.builder().build().putMetricData(metricPutRequest)
+  }
+
+  def createCloudWatchMetricRequest(monitoringResults: Array[Error]) = {
+    val errorMetricDatum = monitoringResults.map(error => {
+      toMetricDatum(error)
+    })
+
+    PutMetricDataRequest.builder()
+      .namespace("2Wheelers_DeliveryFile")
+      .metricData(errorMetricDatum.toSeq:_*).build()
+  }
+
+  def toMetricDatum(error: Error): MetricDatum = {
+      MetricDatum.builder()
+        .metricName(error.message)
+        .value(error.entries.length.toDouble).build()
+  }
+
+
   def main(args: Array[String]): Unit = {
     val spark = SparkSession.builder
       .appName("MonitoringApp")
@@ -89,9 +114,11 @@ object MonitoringApp {
     val inputLocation = new String(
       zkClient.getData.watched.forPath("/free2wheelers/output/dataLocation"))
 
-    validate(spark.read.format("csv")
+    val errors = validate(spark.read.format("csv")
       .option("header", "true")
       .load(inputLocation), spark)
+
+    sendMetricsToCloudWatch(errors)
 
     spark.stop()
   }
