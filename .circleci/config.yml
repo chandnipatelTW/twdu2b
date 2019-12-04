@@ -16,7 +16,7 @@ jobs:
                 keys:
                     - scala-dependencies-{{ checksum "./RawDataSaver/build.sbt" }}-{{ checksum "./StationConsumer/build.sbt"}}-{{ checksum "./StationTransformerNYC/build.sbt"}}
             - run:
-                command: ./sbin/buildAll.sh               
+                command: ./sbin/buildAll.sh
             - persist_to_workspace:
                 root: /home/circleci/project
                 paths:
@@ -36,7 +36,12 @@ jobs:
                 key: java-dependencies-{{ checksum "./CitibikeApiProducer/build.gradle" }}
                 paths:
                     - "~/.gradle"
-               
+
+    deploy-to-test:
+        <<: *defaults
+        steps:
+            - run:
+                command: echo "this will eventually deploy to a test environment"
     deploy:
         <<: *defaults
         steps:
@@ -59,7 +64,7 @@ jobs:
                 fingerprints:
                     - "6e:da:45:56:b8:7d:7f:03:9e:67:1f:ba:7a:65:d8:f8"
             - run:
-                command: ./e2e-test/e2e.sh     
+                command: ./e2e-test/e2e.sh
 
 workflows:
     version: 2
@@ -68,13 +73,16 @@ workflows:
             - build:
                 filters:
                     branches:
-                        only: 
+                        only:
                             - master
                             - start
                             - pipeline-runs-tests
             - approve-deploy:
                 type: approval
-                requires: 
+                requires:
+                    - build
+            - deploy-to-test:
+                requires:
                     - build
             - deploy:
                 requires:
