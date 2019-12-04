@@ -42,7 +42,7 @@ sh /tmp/zookeeper-seed.sh
 echo "====Inserted app config in zookeeper===="
 
 echo "====Copy jar to ingester server===="
-scp CitibikeApiProducer/build/libs/free2wheelers-citibike-apis-producer0.1.0.jar ingester.$TRAINING_COHORT.training:/tmp/
+scp -o StrictHostKeyChecking=no CitibikeApiProducer/build/libs/free2wheelers-citibike-apis-producer0.1.0.jar ingester.$TRAINING_COHORT.training:/tmp/
 echo "====Jar copied to ingester server===="
 
 ssh ingester.$TRAINING_COHORT.training '
@@ -84,7 +84,7 @@ echo "====Producers Deployed===="
 
 
 echo "====Configure HDFS paths===="
-scp ./hdfs/seed.sh emr-master.$TRAINING_COHORT.training:/tmp/hdfs-seed.sh
+scp -o StrictHostKeyChecking=no ./hdfs/seed.sh emr-master.$TRAINING_COHORT.training:/tmp/hdfs-seed.sh
 
 ssh emr-master.$TRAINING_COHORT.training '
 set -e
@@ -129,7 +129,7 @@ echo "====Raw Data Saver Deployed===="
 echo "====Copy Monitoring Job Jar and Script to EMR===="
 scp Monitoring/target/scala-2.11/free2wheelers-monitoring_2.11-0.0.1.jar emr-master.$TRAINING_COHORT.training:/tmp/
 scp Monitoring/src/main/resources/scripts/delivery-file-metric-provider.sh emr-master.$TRAINING_COHORT.training:/tmp/
-scp -r airflow/dags airflow.gcube.training:~/airflow/dags
+scp -o StrictHostKeyChecking=no -r airflow/dags airflow.gcube.training:~/airflow/dags
 
 echo "====Copy Station Consumers Jar to EMR===="
 scp StationConsumer/target/scala-2.11/free2wheelers-station-consumer_2.11-0.0.1.jar emr-master.$TRAINING_COHORT.training:/tmp/
