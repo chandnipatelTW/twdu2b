@@ -34,7 +34,7 @@ echo "====Insert app config in zookeeper===="
 ls -al ~/.ssh/config
 ssh-keyscan -H ec2-13-232-117-128.ap-south-1.compute.amazonaws.com >> ~/.ssh/known_hosts
 scp -v -o StrictHostKeyChecking=no ./zookeeper/seed.sh kafka.$TRAINING_COHORT.training:/tmp/zookeeper-seed.sh
-ssh kafka.$TRAINING_COHORT.training '
+ssh -o StrictHostKeyChecking=no kafka.$TRAINING_COHORT.training '
 set -e
 export hdfs_server="emr-master.gcube.training:8020"
 export kafka_server="kafka.gcube.training:9092"
