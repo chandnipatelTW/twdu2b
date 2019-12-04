@@ -76,14 +76,14 @@ object MonitoringApp {
 
   def sendMetricsToCloudWatch(monitoringResults: Array[Error]) = {
     val metricPutRequest = createCloudWatchMetricRequest(monitoringResults)
-    CloudWatchClient.builder().build().putMetricData(metricPutRequest)
+    metricPutRequest.metricData().add( MetricDatum.builder().metricName("health-check").value(monitoringResults.length.toDouble).build())
+    CloudWatchClient.create().putMetricData(metricPutRequest)
   }
 
   def createCloudWatchMetricRequest(monitoringResults: Array[Error]) = {
     val errorMetricDatum = monitoringResults.map(error => {
       toMetricDatum(error)
     })
-
     PutMetricDataRequest.builder()
       .namespace("2Wheelers_DeliveryFile")
       .metricData(errorMetricDatum.toSeq:_*).build()
@@ -114,10 +114,12 @@ object MonitoringApp {
     val inputLocation = new String(
       zkClient.getData.watched.forPath("/free2wheelers/output/dataLocation"))
 
+    println("Retrieving data from " + inputLocation)
     val errors = validate(spark.read.format("csv")
       .option("header", "true")
       .load(inputLocation), spark)
 
+    println("Sending metrics for " + errors.length + " bad entries")
     sendMetricsToCloudWatch(errors)
 
     spark.stop()

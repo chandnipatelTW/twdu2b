@@ -164,5 +164,7 @@ nohup spark-submit --master yarn --deploy-mode cluster --class com.free2wheelers
 
 nohup spark-submit --master yarn --deploy-mode cluster --class com.free2wheelers.apps.StationApp --name StationTransformerNYC --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.3.0  --driver-memory 500M --conf spark.executor.memory=2g --conf spark.cores.max=1 /tmp/free2wheelers-station-transformer-nyc_2.11-0.0.1.jar kafka.twdu2b.training:2181 1>/tmp/station-transformer-nyc.log 2>/tmp/station-transformer-nyc.error.log &
 
+nohup spark-submit --master yarn --deploy-mode client --class com.free2wheelers.apps.MonitoringApp --name MonitorApp --packages software.amazon.awssdk:aws-sdk-java:2.0.0-preview-1 --driver-memory 500M --conf spark.executor.memory=2g --conf spark.cores.max=1 /home/hadoop/app.jar kafka.twdu2b.training:2181 
+
 echo "====Station Consumers Deployed===="
 '
