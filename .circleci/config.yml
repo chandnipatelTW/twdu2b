@@ -40,8 +40,14 @@ jobs:
     deploy-to-test:
         <<: *defaults
         steps:
+            - checkout
+            - attach_workspace:
+                at: /home/circleci/project
+            - add_ssh_keys:
+                fingerprints:
+                    - "6e:da:45:56:b8:7d:7f:03:9e:67:1f:ba:7a:65:d8:f8"
             - run:
-                command: echo "this will eventually deploy to a test environment"
+                command: ./sbin/deployToTest.sh
     deploy:
         <<: *defaults
         steps:
