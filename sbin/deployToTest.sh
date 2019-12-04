@@ -17,8 +17,6 @@ Host emr-master.$TRAINING_COHORT.training
 Host *.gcube.training !bastion.gcube.training
     User ec2-user
     ForwardAgent yes
-    StrictHostKeyChecking no
-    UserKnownHostsFile=/dev/null
     ProxyCommand ssh bastion.gcube.training -W %h:%p 2>/dev/null
 
 Host bastion.gcube.training
