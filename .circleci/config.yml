@@ -48,7 +48,7 @@ jobs:
                     - "7c:66:56:19:22:c9:99:7f:f9:d0:b5:62:bf:dc:40:81"
             - run:
                 command: ./sbin/deployToTest.sh
-    deploy:
+    deploy-to-prod:
         <<: *defaults
         steps:
             - checkout
