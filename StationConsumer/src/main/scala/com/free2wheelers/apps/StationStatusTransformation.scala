@@ -34,6 +34,7 @@ object StationStatusTransformation {
     val stations: Any = network.asInstanceOf[Map[String, Any]]("stations")
 
     stations.asInstanceOf[Seq[Map[String, Any]]]
+      .filter(r => r("extra").asInstanceOf[Map[String, Any]]("renting") != null)
       .map(x => {
         StationStatus(
           x("free_bikes").asInstanceOf[Double].toInt,
