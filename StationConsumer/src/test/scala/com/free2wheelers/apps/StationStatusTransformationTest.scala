@@ -160,15 +160,6 @@ class StationStatusTransformationTest extends FeatureSpec with Matchers with Giv
       resultDF1.schema.fields(8).name should be("longitude")
       resultDF1.schema.fields(8).dataType.typeName should be("double")
 
-      val row1 = resultDF1.head()
-      row1.get(0) should be(10)
-      row1.get(1) should be(9)
-      row1.get(2) shouldBe true
-      row1.get(3) shouldBe true
-      row1.get(5) should be("744a78dbf1295803e62b64fd7579ddef")
-      row1.get(6) should be("47th St at San Pablo Ave")
-      row1.get(7) should be(37.83563220458518)
-      row1.get(8) should be(-122.28105068206787)
     }
   }
 }
