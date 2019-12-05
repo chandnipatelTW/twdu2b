@@ -92,5 +92,5 @@ workflows:
                     - deploy-to-test
             - deploy-to-prod:
                 requires:
-                    - approve-deploy
+                    - approve-deploy-to-prod
 
