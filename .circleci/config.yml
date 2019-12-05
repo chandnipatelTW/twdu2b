@@ -83,14 +83,14 @@ workflows:
                             - master
                             - start
                             - pipeline-runs-tests
-            - approve-deploy:
-                type: approval
-                requires:
-                    - build
             - deploy-to-test:
                 requires:
                     - build
-            - deploy:
+            - approve-deploy-to-prod:
+                type: approval
+                requires:
+                    - deploy-to-test
+            - deploy-to-prod:
                 requires:
                     - approve-deploy
 
